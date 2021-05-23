@@ -36,46 +36,22 @@ expected_ell = ell' * Zprob_bar ;
 % Alternatively you can use: 
 % P = mc_invdist(ell_prob) ; % which gives the same as Zprob_bar
 
-%% Q1.2 - deterministic RA version
+%%%%%%%%%% Q1.2 - deterministic RA version
 
+% at steady state (1+r)*beta = 1, we can find such r
+% given this r value, we know that at steady state r + delta = MPK 
+% which is the FOC condition of the capital dynamics: 
+% interest rate to wealth r = MPK - depreciation 
+% MPK = alpha* (K/L)^(alpha - 1) = r + delta, rearranging gives
+% K = (alpha / (r + delta))^(1/(1 - alpha))*L , at steady state L = E(ell)
 
-r = 1/beta - 1 ;
+r_ss = 1/beta - 1 ;
+K_RA = (alpha / (r_ss + delta))^(1/(1-alpha)) * expected_ell ;
 
+%%%%%%%%%% Q1.3 - Calculating the General Equilibrium numerically
 
-
-
-
-
-
-%% simulate AR1 process for the log labour supply log l
-
-l0 = 0;
-T  = 250;
-
-xt1 = simulate_AR1(T,mu,phi,sigeps,l0);
-
-[chain,state] = simulate_markov_chain(T,nodes,P,l0);
-
-xt2 = chain;
-
-figure(1)
-plot([xt1,xt2])
-legend('AR1','markov chain')
-xlabel('time')
-ylabel('x(t)')
-
-
-
-
-return
-
-
-
-
-
-
-
-
-
-
-
+amin = 0 ;
+amax = 50 ;
+nbgrid = 150 ;
+nbstate = 7 ;
+agrid = linspace(amin, amax, nbgrid) ;
